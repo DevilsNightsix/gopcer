@@ -3,8 +3,8 @@ from gtts import gTTS
 import re
 import uuid
 import os
-
-updater = Updater(token=os.environ['TELEGRAM_TOKEN'])
+TOKEN = os.environ['TELEGRAM_TOKEN']
+updater = Updater(token=TOKEN)
 dispatcher = updater.dispatcher
 
 def start(bot, update):
@@ -23,4 +23,10 @@ say_handler = CommandHandler('say', say)
 dispatcher.add_handler(start_handler)
 dispatcher.add_handler(say_handler)
 
-updater.start_polling()
+import os
+
+PORT = int(os.environ.get('PORT', '5000'))
+# add handlers
+updater.start_webhook(listen="0.0.0.0", port=PORT, url_path=TOKEN)
+updater.bot.setWebhook("https://gopcer-bot.herokuapp.com/" + TOKEN)
+updater.idle()
